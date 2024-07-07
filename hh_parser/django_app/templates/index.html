@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>парсер для hh.ru</h1>
+    
+    <h2>Настройки</h2>
+    <form id="parseForm">
+        <label for="entity_type">Выберете:</label>
+        <select id="entity_type" name="entity_type">
+            <option value="candidates">Работники</option>
+            <option value="vacancies"><Datag>Вакансия</Datag></option>
+        </select>
+        <br><br>
+
+        <button type="submit">Искать</button>
+    </form>
+    
+    <h2>Анализ</h2>
+    <button id="getAnalytics">Анализ</button>
+    
+    <h3>Итог</h3>
+    <pre id="results"></pre>
+    
+    <script>
+        document.getElementById('parseForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const queryString = new URLSearchParams(formData).toString();
+            
+            fetch(`/parse/?${queryString}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('results').textContent = JSON.stringify(data, null, 2);
+                });
+        });
+
+        document.getElementById('getAnalytics').addEventListener('click', function() {
+            fetch('/analytics/')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('results').textContent = JSON.stringify(data, null, 2);
+                });
+        });
+    </script>
+</body>
+</html>
